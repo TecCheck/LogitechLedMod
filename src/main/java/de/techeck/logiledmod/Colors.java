@@ -11,5 +11,8 @@ public class Colors {
 	public static RGB OffRGB = new RGB(0, 0, 0);
 	// WASD Color
 	public static RGB wasdRGB = new RGB(0, 100, 0);
-
+	// Usable Color
+	public static RGB useRGB = new RGB(0,75,75);
+	public static RGB nouseRGB = new RGB(0,0,0);
+	
 }

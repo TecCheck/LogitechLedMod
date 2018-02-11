@@ -25,7 +25,20 @@ public class LED {
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.EIGHT, rgb.R, rgb.G, rgb.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.NINE, rgb.R, rgb.G, rgb.B);
 	}
-
+	
+	public static void makeFKeys(RGB FKeyRGB) {
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F1, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F2, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F3, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F4, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F5, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F6, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F7, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F8, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F9, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F10, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+	}
+	
 	public static void setItemSlot(int slot, RGB Argb, RGB Drgb) {
 		slot++;
 
@@ -299,7 +312,27 @@ public class LED {
 		case "0":
 			num = LogiLED.ZERO;
 			break;
-
+		case "SPACE":
+			num = LogiLED.SPACE;
+			break;
+		case "LSHIFT":
+			num = LogiLED.LEFT_SHIFT;
+			break;
+		case "RSHIFT":
+			num = LogiLED.RIGHT_SHIFT;
+			break;
+		case "LCONTROL":
+			num = LogiLED.LEFT_CONTROL;
+			break;
+		case "RCONTROL":
+			num = LogiLED.RIGHT_CONTROL;
+			break;
+		case "TAB":
+			num = LogiLED.TAB;
+			break;
+		case "SLASH":
+			num = LogiLED.FORWARD_SLASH;
+			break;
 		}
 		return num;
 
