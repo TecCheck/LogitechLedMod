@@ -2,73 +2,54 @@ package de.techeck.logiledmod;
 
 import com.logitech.gaming.LogiLED;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class Events {
 
-	boolean init = true;
+	@SubscribeEvent
+	public void onPlayerHurt(LivingHurtEvent event) {
 
-	/*
-	 * @SubscribeEvent public void onLogin(PlayerLoggedInEvent event){
-	 * 
-	 * System.out.println("Player logginEvent");
-	 * 
-	 * if(event.player == Minecraft.getMinecraft().thePlayer) {
-	 * System.out.println("player hast joined"); }
-	 * 
-	 * }
-	 * 
-	 */
+		if (event.entity instanceof EntityPlayer) {
+			int hurtTime = event.entityLiving.maxHurtTime;
+			hurtTime *= 20;
+			LED.playerHit(Colors.Flash, hurtTime, hurtTime - 1);
+		}
+	}
 
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 
 		if (event.player.worldObj.isRemote) {
 			LED.setItemSlot(event.player.inventory.currentItem, Colors.ActiveSlotRGB, Colors.DisabledSlotRGB);
-			LED.setHealth((int) event.player.getHealth(), Colors.FullRGB, Colors.HalfRGB, Colors.OffRGB);
+			LED.setHealth((int) event.player.getHealth(), Colors.FullHeartRGB, Colors.HalfHeartRGB, Colors.OffHeartRGB);
+			LED.setGoldHealth((int) event.player.getAbsorptionAmount(), Colors.FullGoldHeartRGB,
+					Colors.HalfGoldHeartRGB, Colors.OffHeartRGB);
 
 		}
 
 	}
 
-	public void onClientTick(TickEvent.ClientTickEvent event) {
-		int currentItem = Minecraft.getMinecraft().thePlayer.inventory.currentItem;
-
-	}
-
 	@SubscribeEvent
-	public void onHome(GuiOpenEvent event) {
-		if (init) {
+	public void onGuiOpen(GuiOpenEvent event) {
+		if (event.gui != null) {
 
-			if (event.gui instanceof GuiMainMenu) {
+			if (LED.init) {
+				LED.initLED(event);
+			} else if (event.gui instanceof GuiChat) {
+				LED.onChatOpen();
+				LED.lastGui = event.gui;
+			}
 
-				System.out.println("LED Mod Init " + (LogiLED.LogiLedInit() ? "Succesfull!" : "Failed!"));
-				LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
-				LogiLED.LogiLedSaveCurrentLighting();
-				LogiLED.LogiLedSetLighting(0, 0, 0);
-
-				RGB useRGB = Colors.useRGB;
-
-				for (String key : LogiLEDMod.keys) {
-					LogiLED.LogiLedSetLightingForKeyWithKeyName(LED.getKeyNumber(key), useRGB.R, useRGB.G, useRGB.B);
-				}
-
-				init = false;
-				
-				LED.makeNumbers(Colors.DisabledSlotRGB);
-				LED.makeWASD(Colors.wasdRGB);
-				LED.makeFKeys(Colors.FullRGB);
+		} else {
+			if (LED.lastGui instanceof GuiChat) {
+				LED.onChatClose();
 			}
 		}
 	}

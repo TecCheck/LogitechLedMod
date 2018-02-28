@@ -2,10 +2,78 @@ package de.techeck.logiledmod;
 
 import com.logitech.gaming.LogiLED;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.client.event.GuiOpenEvent;
+
 public class LED {
 
 	public static int activeSlot = 0;
 	public static int activeHealth = 0;
+	public static int activeGoldHealth = 0;
+
+	static boolean init = true;
+	static boolean chatOpen = false;
+	static GuiScreen lastGui = null;
+
+	public static void initLED(GuiOpenEvent event) {
+		if (event.gui instanceof GuiMainMenu) {
+
+			System.out.println("LED Mod Init " + (LogiLED.LogiLedInit() ? "Succesfull!" : "Failed!"));
+			LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
+			LogiLED.LogiLedSetLighting(Colors.BackgroundRGB.R, Colors.BackgroundRGB.G, Colors.BackgroundRGB.B);
+
+			makeUsedKeys(Colors.UseRGB);
+			makeNumbers(Colors.DisabledSlotRGB);
+			makeGoldHealth(Colors.OffHeartRGB);
+			makeWASD(Colors.WasdRGB);
+			makeFKeys(Colors.FullHeartRGB);
+			LogiLED.LogiLedSaveCurrentLighting();
+
+			init = false;
+		}
+	}
+
+	public static void onChatOpen() {
+		if (!chatOpen) {
+			LogiLED.LogiLedSaveCurrentLighting();
+			System.out.println("Chat opened!!");
+			chatOpen = true;
+			makeChat(Colors.ChatRGB, Colors.BackgroundRGB);
+
+		}
+
+	}
+
+	public static void onChatClose() {
+		if (chatOpen) {
+			System.out.println("Chat closed!!");
+			System.out.println("Light " + (LogiLED.LogiLedRestoreLighting() ? "restored!" : "not restored!"));
+
+			/*
+			 * LogiLED.LogiLedSetLighting(0, 0, 0); makeNumbers(Colors.DisabledSlotRGB);
+			 * makeGoldHealth(Colors.OffHeartRGB); makeWASD(Colors.WasdRGB);
+			 * makeFKeys(Colors.FullHeartRGB);
+			 */
+			chatOpen = false;
+			updateKeys();
+		}
+	}
+
+	public static void updateKeys() {
+		System.out.println("Keyupdate");
+		LED.setItemSlot(Minecraft.getMinecraft().thePlayer.inventory.currentItem, Colors.ActiveSlotRGB,
+				Colors.DisabledSlotRGB);
+		LED.setHealth((int) Minecraft.getMinecraft().thePlayer.getHealth(), Colors.FullHeartRGB, Colors.HalfHeartRGB,
+				Colors.OffHeartRGB);
+		LED.setGoldHealth((int) Minecraft.getMinecraft().thePlayer.getAbsorptionAmount(), Colors.FullGoldHeartRGB,
+				Colors.HalfGoldHeartRGB, Colors.OffHeartRGB);
+	}
+
+	public static void playerHit(RGB color, int duration, int interval) {
+		LogiLED.LogiLedFlashLighting(color.R, color.G, color.B, duration, interval);
+	}
 
 	public static void makeWASD(RGB rgb) {
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.W, rgb.R, rgb.G, rgb.B);
@@ -24,8 +92,9 @@ public class LED {
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.SEVEN, rgb.R, rgb.G, rgb.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.EIGHT, rgb.R, rgb.G, rgb.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.NINE, rgb.R, rgb.G, rgb.B);
+		activeSlot = 0;
 	}
-	
+
 	public static void makeFKeys(RGB FKeyRGB) {
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F1, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F2, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
@@ -37,8 +106,34 @@ public class LED {
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F8, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F9, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
 		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F10, FKeyRGB.R, FKeyRGB.G, FKeyRGB.B);
+		activeHealth = 0;
 	}
-	
+
+	public static void makeGoldHealth(RGB color) {
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, color.R, color.G, color.B);
+		LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, color.R, color.G, color.B);
+		activeGoldHealth = 0;
+	}
+
+	public static void makeChat(RGB color, RGB back) {
+
+		String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		char[] abcArray = abc.toCharArray();
+
+		LogiLED.LogiLedSetLighting(back.R, back.G, back.B);
+
+		for (char ch : abcArray) {
+			LogiLED.LogiLedSetLightingForKeyWithKeyName(getKeyNumber(String.valueOf(ch)), color.R, color.G, color.B);
+		}
+
+	}
+
+	public static void makeUsedKeys(RGB color) {
+		for (String key : LogiLEDMod.keys) {
+			LogiLED.LogiLedSetLightingForKeyWithKeyName(getKeyNumber(key), color.R, color.G, color.B);
+		}
+	}
+
 	public static void setItemSlot(int slot, RGB Argb, RGB Drgb) {
 		slot++;
 
@@ -46,6 +141,7 @@ public class LED {
 			if (activeSlot == 0) {
 				activeSlot = slot;
 			}
+
 			LogiLED.LogiLedSetLightingForKeyWithKeyName(getKeyNumber(String.valueOf(activeSlot)), Drgb.R, Drgb.G,
 					Drgb.B);
 			LogiLED.LogiLedSetLightingForKeyWithKeyName(getKeyNumber(String.valueOf(slot)), Argb.R, Argb.G, Argb.B);
@@ -55,17 +151,15 @@ public class LED {
 
 	public static void setHealth(int health, RGB FRGB, RGB HRGB, RGB OffRGB) {
 
-		final int r = FRGB.R;
-		final int g = FRGB.G;
-		final int b = FRGB.B;
-
-		final int hR = HRGB.R;
-		final int hG = HRGB.G;
-		final int hB = HRGB.B;
-
 		if (activeHealth != health) {
 
-			activeHealth = health;
+			final int r = FRGB.R;
+			final int g = FRGB.G;
+			final int b = FRGB.B;
+
+			final int hR = HRGB.R;
+			final int hG = HRGB.G;
+			final int hB = HRGB.B;
 
 			System.out.println(health);
 
@@ -156,8 +250,53 @@ public class LED {
 					LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F1, hR, hG, hB);
 				}
 			}
+			activeHealth = health;
 		}
 
+	}
+
+	public static void setGoldHealth(int health, RGB fullRGB, RGB halfRGB, RGB offRGB) {
+
+		if (activeGoldHealth != health) {
+
+			activeGoldHealth = health;
+
+			if (health > 4)
+				health = 4;
+
+			switch (health) {
+			case 0:
+				System.out.println("F11 off");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, offRGB.R, offRGB.R, offRGB.R);
+				System.out.println("F12 off");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, offRGB.R, offRGB.R, offRGB.R);
+				break;
+			case 1:
+				System.out.println("F11 half");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, halfRGB.R, halfRGB.R, halfRGB.R);
+				System.out.println("F12 off");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, offRGB.R, offRGB.R, offRGB.R);
+				break;
+			case 2:
+				System.out.println("F11 full");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, fullRGB.R, fullRGB.R, fullRGB.R);
+				System.out.println("F12 off");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, offRGB.R, offRGB.R, offRGB.R);
+				break;
+			case 3:
+				System.out.println("F11 full");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, fullRGB.R, fullRGB.R, fullRGB.R);
+				System.out.println("F12 half");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, halfRGB.R, halfRGB.R, halfRGB.R);
+				break;
+			case 4:
+				System.out.println("F11 full");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F11, fullRGB.R, fullRGB.R, fullRGB.R);
+				System.out.println("F12 full");
+				LogiLED.LogiLedSetLightingForKeyWithKeyName(LogiLED.F12, fullRGB.R, fullRGB.R, fullRGB.R);
+				break;
+			}
+		}
 	}
 
 	public static int getKeyNumber(String KeyName) {
