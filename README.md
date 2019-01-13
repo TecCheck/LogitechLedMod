@@ -1,6 +1,6 @@
 # LogitechLedMod
 A simple Mod that allows Minecraft to light your Logitech G Keyboard. 
-Made with the [LED Illumination SDK](http://www.logitechg.com/en-us/innovation/developer-lab.html)
+Made with the [LED Illumination SDK](https://www.logitechg.com/en-us/innovation/developer-lab.html)
 
 ### Features that are currently Avalible:
 * The main control Keys (like WASD and Space) have their own color
