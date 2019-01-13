@@ -39,7 +39,7 @@ public class LogiLEDMod {
 		data.version = VERSION;
 		data.modId = MODID;
 		data.name = EnumChatFormatting.AQUA + "Logitech" + EnumChatFormatting.RESET + " " + EnumChatFormatting.RED + "L"
-				+ EnumChatFormatting.GREEN + "E" + EnumChatFormatting.BLUE + "D" + EnumChatFormatting.RESET + " Mod";
+				+ EnumChatFormatting.GREEN + "E" + EnumChatFormatting.BLUE + "D" + EnumChatFormatting.AQUA + " Mod";
 		data.description = "A mod that adds support for" + EnumChatFormatting.AQUA + " Logitech G"
 				+ EnumChatFormatting.RESET + " Keyboard Lighting";
 		data.credits = "TeckCheck";
