@@ -103,10 +103,11 @@ public class MainController {
 		// executed on start (if the game reaches the Main
 		// Menu the first time <-- does the GuiOpen method)
 		LogiLED.LogiLedInit();
-		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_ALL);
+		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
 
 		startMainLayout();
 		startChatLayout();
+		setMouse(Settings.MouseColor, Settings.useMouse);
 
 		isChat = false;
 
@@ -227,7 +228,7 @@ public class MainController {
 		// sets the mouse color if enabled
 		if (enabled) {
 			LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_RGB);
-			LogiLED.LogiLedSetLighting(color.r, color.g, color.b);
+			LogiLED.LogiLedSetLightingForTargetZone(LogiLED.DeviceType_Mouse, 0, color.r, color.g, color.b);
 		}
 		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
 	}
