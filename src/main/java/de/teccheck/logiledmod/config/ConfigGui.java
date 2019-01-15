@@ -37,15 +37,21 @@ public class ConfigGui extends GuiConfig {
 
 	void replaceEntryList() {
 		int i = 0;
+		System.out.println("entryList size: " + this.entryList.listEntries.size());
+		System.out.println("entryList: " + this.entryList.listEntries);
 		while (i < this.entryList.listEntries.size()) {
 			IConfigEntry element = this.entryList.listEntries.get(i);
-
-			if (element.getConfigElement().getType().toString().equals("INTEGER")
-					&& !(element instanceof CustomGuiConfigArrayEntry)) {
-				CustomGuiConfigArrayEntry conf = CustomGuiConfigArrayEntry.fromSuperClass(element);
-				this.entryList.listEntries.set(i, conf);
-				System.out.println("initEntrys nr." + i + " = " + this.entryList.listEntries.get(i) + " ElementClass:"
-						+ this.entryList.listEntries.get(i).getConfigElement().getClass());
+			System.out.println("element: " + element);
+			System.out.println("elementName: " + element.getName());
+			if (element instanceof net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry) {
+				if (element.getConfigElement().getType().toString().equals("INTEGER")) {
+					if (!(element instanceof CustomGuiConfigArrayEntry)) {
+						CustomGuiConfigArrayEntry conf = CustomGuiConfigArrayEntry.fromSuperClass(element);
+						this.entryList.listEntries.set(i, conf);
+						System.out.println("initEntrys nr." + i + " = " + this.entryList.listEntries.get(i)
+								+ " ElementClass:" + this.entryList.listEntries.get(i).getConfigElement().getClass());
+					}
+				}
 			}
 			i++;
 		}

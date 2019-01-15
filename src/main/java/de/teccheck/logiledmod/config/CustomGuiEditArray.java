@@ -6,6 +6,7 @@ import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -32,8 +33,8 @@ public class CustomGuiEditArray extends GuiEditArray {
 	private GuiTextField green;
 	private GuiTextField blue;
 
-	private int colorPickerX = 0;
-	private int colorPickerY = 0;
+	public int colorPickerX = 0;
+	public int colorPickerY = 0;
 
 	public CustomGuiEditArray(GuiScreen parentScreen, IConfigElement configElement, int slotIndex,
 			Object[] currentValues, boolean enabled) {
@@ -43,16 +44,18 @@ public class CustomGuiEditArray extends GuiEditArray {
 	/**
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		this.titleLine3 = "Preview is on the Keyboard";
 		super.initGui();
 
 		try {
-			File classPathInput = new File(
-					CustomGuiEditArray.class.getResource("/assets/logiledmod/textures/gui/ColorPicker.png").getFile());
-			colorPickImg = ImageIO.read(classPathInput);
+			InputStream in = Minecraft.getMinecraft().getResourceManager().getResource(resourceLocation)
+					.getInputStream();
+			colorPickImg = ImageIO.read(in);
+			// File classPathInput = new File(
+			// CustomGuiEditArray.class.getResource("/assets/logiledmod/textures/gui/ColorPicker.png").getFile());
+			// colorPickImg = ImageIO.read(classPathInput);
 			if (colorPickImg != null)
 				System.out.println("ImageFound");
 			this.colorPickRect = new Rectangle2D.Double(0.0, 0.0, this.colorPickImg.getWidth(),
@@ -91,6 +94,7 @@ public class CustomGuiEditArray extends GuiEditArray {
 
 	}
 
+	/*
 	@Override
 	public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
 		if (text.equals(this.titleLine2)) {
@@ -105,7 +109,8 @@ public class CustomGuiEditArray extends GuiEditArray {
 		// fontRendererIn.getStringWidth(text) / 2),(float) y, color);
 
 	}
-
+	*/
+	
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (Integer.parseInt(red.getText()) > 100) {
@@ -142,9 +147,16 @@ public class CustomGuiEditArray extends GuiEditArray {
 		}
 	}
 
-	protected void getRGB(final int mouseX, final int mouseY) {
-		final int x = mouseX - colorPickerX - (int) this.colorPickRect.x;
-		final int y = mouseY - colorPickerY - (int) this.colorPickRect.y;
+	protected void getRGB(int mouseX, int mouseY) {
+		System.out.println("mouseX: " + mouseX);
+		System.out.println("mouseY: " + mouseY);
+		System.out.println("colorPickerX: " + colorPickerX);
+		System.out.println("colorPickery: " + colorPickerY);
+		System.out.println("colorPickRect: " + colorPickRect);
+		System.out.println("colorPickRect.x: " + colorPickRect.x);
+		System.out.println("colorPickRect.y: " + colorPickRect.y);
+		int x = mouseX - colorPickerX - (int) this.colorPickRect.x;
+		int y = mouseY - colorPickerY - (int) this.colorPickRect.y;
 		if (x >= 0 && y >= 0 && this.colorPickRect.contains(x, y) && Mouse.isButtonDown(0)) {
 
 			int[] rgb = RGB.ints(this.colorPickImg.getRGB(x, y));

@@ -22,12 +22,15 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = LogiLEDMod.MODID, name = LogiLEDMod.NAME, version = LogiLEDMod.VERSION, guiFactory = LogiLEDMod.GUI_FACTORY)
+@Mod(modid = LogiLEDMod.MODID, name = LogiLEDMod.NAME, version = LogiLEDMod.VERSION, guiFactory = LogiLEDMod.GUI_FACTORY, clientSideOnly = LogiLEDMod.CLIENT_SIDE_ONLY, acceptedMinecraftVersions = LogiLEDMod.MC_VERSIONS, useMetadata = LogiLEDMod.USE_METADATA)
 public class LogiLEDMod {
+	public static final String GUI_FACTORY = "de.teccheck." + LogiLEDMod.MODID + ".config.ConfigGuiFactory";
 	public static final String MODID = "logiledmod";
 	public static final String VERSION = "0.5";
 	public static final String NAME = "Logitech LED Mod";
-	public static final String GUI_FACTORY = "de.teccheck." + LogiLEDMod.MODID + ".config.ConfigGuiFactory";
+	public static final String MC_VERSIONS = "";
+	public static final boolean CLIENT_SIDE_ONLY = true;
+	public static final boolean USE_METADATA = true;
 
 	public static File configFile = null;
 
@@ -41,7 +44,7 @@ public class LogiLEDMod {
 		data.name = EnumChatFormatting.AQUA + "Logitech" + EnumChatFormatting.RESET + " " + EnumChatFormatting.RED + "L"
 				+ EnumChatFormatting.GREEN + "E" + EnumChatFormatting.BLUE + "D" + EnumChatFormatting.AQUA + " Mod";
 		data.description = "A mod that adds support for" + EnumChatFormatting.AQUA + " Logitech G"
-				+ EnumChatFormatting.RESET + " Keyboard Lighting";
+				+ EnumChatFormatting.RESET + " Keyboard Lighting \nMade with the Logitech LED Illumination SDK\nLink: https://www.logitechg.com/en-us/innovation/developer-lab.html";
 		data.credits = "TeckCheck";
 		data.url = "https://github.com/TecCheck/LogitechLedMod";
 

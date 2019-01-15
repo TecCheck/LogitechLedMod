@@ -3,14 +3,7 @@
   "modid": "logiledmod",
   "name": "Logitech LED Mod",
   "description": "A simple Mod that allows Minecraft to use your Logitech G RGB Keyboard",
-  "version": "${version}",
-  "mcversion": "1.8",
-  "url": "",
-  "updateUrl": "",
   "authorList": ["TecCheck"],
   "credits": "Thanks to Logitech for the LED-SDK",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
 }
 ]

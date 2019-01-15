@@ -11,8 +11,8 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
     }
+    apply plugin: 'net.minecraftforge.gradle.forge'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
 */
 
 // for people who want stable
@@ -20,9 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+version = "0.5"
+group= "de.teccheck.logiledmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "logiledmod"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 minecraft {
     version = "1.8-11.14.4.1563"
@@ -39,6 +42,7 @@ minecraft {
 
 dependencies {
     // you may put jars on which you depend on in ./libs
+    // compile files('libs/logiled.jar')
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
