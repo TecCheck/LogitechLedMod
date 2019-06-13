@@ -14,7 +14,7 @@ Made with the [LED Illumination SDK](https://www.logitechg.com/en-us/innovation/
 
 ### Works on:
 * Minecraft 1.8 with Forge
-* Only tested on Windows 10x64
+* Only tested on Windows 10 x64
 * Should Work on most Windows systems and maybe Mac and Linux (just test it)
 
 ### Installation:
